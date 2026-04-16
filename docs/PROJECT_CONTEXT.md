@@ -1,197 +1,149 @@
-# SENDECOR KITCHEN PLUGIN — PROJECT CONTEXT (SINGLE SOURCE)
+# PROJECT CONTEXT — SENDECOR KITCHEN PLUGIN
 
 ---
 
-## 1. PROJECT STATUS
+## 1. PROJECT OVERVIEW
 
-- Layout Engine: RUNNING
-- Geometry: STABLE (base / tall / wall)
+Plugin for generating kitchen cabinets in PYTHA using Lua.
+
+System builds:
+- Base cabinets
+- Tall cabinets
+- Wall cabinets
+
+Layout:
+- L-shape kitchen (Run A + Run B)
+
+---
+
+## 2. CURRENT SYSTEM STATUS
+
+### Core
+- Layout Engine: DONE
 - Grouping: DONE
-- Selection system: DONE
-- Highlight system: OPTIONAL
-- System stage: INTERACTIVE DEBUG
+- Selection (select_module): DONE
+- Highlight system: DONE
+- Runtime: STABLE (no crash)
+
+### Placement
+- Run A: extends along X axis → ✅ CORRECT
+- Run B: extends along Y axis → ✅ CORRECT
+
+### Geometry
+- Run A: correct
+- Run B: ❌ NOT rotated (still uses X-axis logic)
 
 ---
 
-## 2. ARCHITECTURE (LOCKED)
+## 3. ARCHITECTURE (LOCKED)
 
-CFG → MODULES → RUNTIME → PLACEMENT → GEOMETRY → GROUPING → MAIN
-
-### RULES (STRICT)
-
-- Single file ONLY
-- NO require()
-- NO multi-file
-- NO large refactor
-- ONLY minimal safe patch
-- Claude must return FULL FILE
+1. CFG
+2. modules
+3. runtime (rt)
+4. placement
+5. geometry (base / tall / wall)
+6. grouping
+7. main()
 
 ---
 
-## 3. COORDINATE SYSTEM
+## 4. CURRENT LAYOUT LOGIC
 
-- X = horizontal (Run direction)
-- Y = depth (front = 0)
-- Z = height
+### Run A
+- Direction: +X
+- Sequence:
+  fridge → drawer → sink → corner
 
-### GLOBAL RULE
-
-ALL modules MUST align:
-- front_y = 0
-
----
-
-## 4. RUN A (MAIN LINE)
-
-### ORDER (LOCKED)
-
-FRIDGE 820 → DRAWER 930 → SINK 485 → CORNER 680
-
-### BEHAVIOR
-
-- Built along +X
-- CORNER = VOID (no cabinet)
-- CORNER is anchor for Run B
-
----
-
-## 5. RUN B (SECOND LINE)
-
-### CURRENT STATE
-
-- Starts from Run A corner
-- Currently still linear (X direction)
-- NOT yet true L-shape
-
----
-
-### TARGET ORDER (CRITICAL)
-
-runB_void → wall_2d → tall_mw
-
----
-
-### ELEMENT RULES
-
-#### 1. runB_void
-- type = void
-- width = filler_w (default 50)
-- MUST always reserve layout space
-- debug block optional
-
-#### 2. wall_2d
-- MUST belong to Run B (NOT Run A)
-- positioned after void
-- height = wall_h
-- depth = wall_depth
-
-#### 3. tall_mw
-- final element of Run B
-- full height cabinet
-
----
-
-### CRITICAL LOGIC
-
-- Run B starts at:
-  corner.x + corner.width
-
-- placement is cumulative:
-  current_x_b += module.width
-
----
-
-## 6. WALL SYSTEM
-
-### CURRENT
-
-- wall_2d still referencing Run A (sink)
-
-### TARGET
-
-- wall MUST move into Run B system
-- no dependency on Run A
-
----
-
-## 7. VOID SYSTEM
-
-### Run A Corner
-- type = void
-- used as transition only
-
-### Run B Void
-- type = void
-- acts as spacer (parametric future)
-- MUST exist even if hidden
-
----
-
-## 8. GEOMETRY RULES
-
-### BASE
-- toe kick included
-- door = front_y - door_thickness
-
-### TALL
-- split upper / lower door
-- divider at wall_h
-
-### WALL
-- flap door
-- internal shelf
-- full width
-
----
-
-## 9. DEBUG FLAGS
-
-- show_corner_void_block
-- show_runB_void_block
-- enable_highlight
-
----
-
-## 10. CURRENT LIMITATIONS
-
-1. Run B NOT true L-shape
-2. Wall still tied to Run A (incorrect)
-3. Void chưa fully parametric
-4. No corner rotation system
-
----
-
-## 11. NEXT DEVELOPMENT TARGET
-
-### PHASE 1 (NOW)
-- Fix Run B order:
+### Run B
+- Anchor: end of corner (Run A)
+- Direction: +Y
+- Sequence:
   runB_void → wall_2d → tall_mw
 
-### PHASE 2
-- Convert Run B → TRUE L-SHAPE (Z axis)
-- Introduce corner anchor logic
+---
 
-### PHASE 3
-- Parametric spacing system (void = variable)
-- Dynamic layout scaling
+## 5. PLACEMENT RULES
+
+- Run A:
+  - X accumulates using module.width
+  - Y = front_y + depth
+
+- Run B:
+  - X is fixed at corner anchor
+  - Y accumulates using module.width
+  - front_y shifts per module
+
+- void:
+  - always reserves layout space
+  - debug block optional
 
 ---
 
-## 12. WORKFLOW
+## 6. GEOMETRY RULES (CURRENT)
 
-- GitHub = SOURCE OF TRUTH
-- GPT = analysis + planning
-- Claude = code patching
+### Default (Run A)
+- width → X direction
+- depth → Y direction
 
----
-
-## 13. SYSTEM GOAL
-
-Build a stable kitchen generator:
-- Layout correct
-- Geometry clean
-- Expandable (modules, spacing, AI)
+### Missing (Run B)
+- ❌ No axis handling yet
+- ❌ Geometry still assumes X-axis
 
 ---
 
-END OF CONTEXT
+## 7. CURRENT PROBLEM
+
+Run B placement is correct, but geometry is not rotated.
+
+Result:
+- Modules overlap incorrectly in spatial logic
+- System is NOT a true L-shape
+
+---
+
+## 8. TARGET STATE
+
+- Run A: unchanged
+- Run B:
+  - modules extend along Y axis
+  - depth extrudes along X axis
+  - true L-shape achieved
+
+---
+
+## 9. ACTIVE RULES (CRITICAL)
+
+- SINGLE FILE ONLY
+- NO require()
+- DO NOT refactor architecture
+- DO NOT modify geometry logic beyond minimal patch
+- ALWAYS prefer stability over features
+
+---
+
+## 10. COMPLETED MILESTONES
+
+- Layout Engine V1
+- Grouping system
+- Selection system
+- Highlight system
+- Run B placement conversion (X → Y)
+
+---
+
+## 11. NEXT DEVELOPMENT STEP
+
+Fix geometry orientation for Run B:
+- Add axis="y" support in builders
+- Apply ONLY to Run B
+- Keep Run A unchanged
+
+---
+
+## 12. KNOWN LIMITATIONS
+
+- No axis abstraction in geometry
+- No true L-shape rendering yet
+- Highlight assumes X-axis (may be incorrect for Run B)
+
+---

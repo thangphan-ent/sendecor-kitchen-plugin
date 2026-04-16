@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://xmlns.pytha.com/plugin_config/1.0">
+  
+  <header>
+    <guid>3f8a9c10-7c2b-4c6e-9b6f-123456789abc</guid>
+    <version>1.0</version>
+    <pytha-version>26.0</pytha-version>
+    <name>SENDECOR KITCHEN</name>
+    <description>Sendecor parametric kitchen plugin (debug build)</description>
+    <licensing>SENDECOR Internal</licensing>
+  </header>
+
+  <!-- MAIN RUN -->
+  <extension type="function">
+    <entry-point>main_run</entry-point>
+    <caption>SENDECOR Kitchen Run</caption>
+    <description>Build kitchen layout Run A + Run B</description>
+  </extension>
+
+  <!-- EDIT MODE -->
+  <extension type="edit">
+    <id>SENDECOR_EDIT</id>
+    <entry-point>edit_cabinet</entry-point>
+  </extension>
+
+</plugin>

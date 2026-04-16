@@ -1,39 +1,12 @@
 # NEXT STEP
 
 ## Priority Task
-
-Fix Run B geometry orientation.
+Fix Run B geometry orientation
 
 ## Why
-
-- Placement already correct
-- Geometry still uses X-axis logic
-- System is NOT true L-shape yet
+- Geometry still incorrect despite correct placement
 
 ## Required
-
 - Add axis="y" to builders
-- Apply ONLY to Run B
+- Rotate Run B physically
 - Keep Run A unchanged
-
-## DO NOT
-
-- Refactor system
-- Change placement
-- Touch grouping / selection
-
-## Success Criteria
-
-- Run B modules extend along Y
-- Depth extrudes along X
-- Visual L-shape is correct
-# NEXT STEP
-
-## Priority Task
-[next]
-
-## Why
-- [issue]
-
-## Required
-- [decision]

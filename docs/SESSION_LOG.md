@@ -38,3 +38,19 @@
 
 ### NEXT TASK
 - [next]
+## SESSION CLOSE — 2026-04-16
+
+### DONE
+- Run B placement moved from X → Y axis
+- Correct Run B order implemented
+
+### ISSUE
+- Geometry still uses X-axis logic
+- Run B is not physically rotated
+
+### DECISION
+- Add axis="y" support in geometry builders
+- Apply ONLY to Run B
+
+### NEXT TASK
+- Fix Run B geometry orientation

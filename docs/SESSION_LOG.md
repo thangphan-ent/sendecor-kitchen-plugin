@@ -25,3 +25,16 @@
 
 - ## SESSION CLOSE — 2026-04-16
 ...
+## SESSION CLOSE — [DATE]
+
+### DONE
+- [done]
+
+### ISSUE
+- [issue]
+
+### DECISION
+- [decision]
+
+### NEXT TASK
+- [next]

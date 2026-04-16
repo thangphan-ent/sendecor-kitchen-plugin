@@ -22,3 +22,6 @@
 
 ### Next Focus
 - Add axis="y" support to geometry
+
+- ## SESSION CLOSE — 2026-04-16
+...

@@ -26,12 +26,12 @@ Layout:
 - Runtime: STABLE (no crash)
 
 ### Placement
-- Run A: extends along X axis → ✅ CORRECT
-- Run B: extends along Y axis → ✅ CORRECT
+- Run A: extends along X axis → CORRECT
+- Run B: extends along Y axis → CORRECT
 
 ### Geometry
 - Run A: correct
-- Run B: ❌ NOT rotated (still uses X-axis logic)
+- Run B: NOT rotated (still uses X-axis logic)
 
 ---
 
@@ -86,8 +86,8 @@ Layout:
 - depth → Y direction
 
 ### Missing (Run B)
-- ❌ No axis handling yet
-- ❌ Geometry still assumes X-axis
+- No axis handling yet
+- Geometry still assumes X-axis
 
 ---
 
@@ -96,8 +96,8 @@ Layout:
 Run B placement is correct, but geometry is not rotated.
 
 Result:
-- Modules overlap incorrectly in spatial logic
-- System is NOT a true L-shape
+- Modules are spatially incorrect
+- System is NOT a true L-shape yet
 
 ---
 
@@ -116,7 +116,7 @@ Result:
 - SINGLE FILE ONLY
 - NO require()
 - DO NOT refactor architecture
-- DO NOT modify geometry logic beyond minimal patch
+- DO NOT modify system beyond minimal safe patch
 - ALWAYS prefer stability over features
 
 ---
@@ -127,7 +127,8 @@ Result:
 - Grouping system
 - Selection system
 - Highlight system
-- Run B placement conversion (X → Y)
+- Run B order fixed
+- Run B placement converted from X → Y
 
 ---
 
@@ -144,6 +145,25 @@ Fix geometry orientation for Run B:
 
 - No axis abstraction in geometry
 - No true L-shape rendering yet
-- Highlight assumes X-axis (may be incorrect for Run B)
+- Highlight still assumes old direction logic
 
 ---
+
+## 13. WORKFLOW
+
+- GitHub = SOURCE OF TRUTH
+- GPT = analysis + planning
+- Claude = code patching
+
+---
+
+## 14. SYSTEM GOAL
+
+Build a stable kitchen generator:
+- Layout correct
+- Geometry clean
+- Expandable (modules, spacing, AI)
+
+---
+
+END OF CONTEXT

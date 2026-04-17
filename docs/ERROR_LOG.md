@@ -33,17 +33,16 @@ OPEN / FIXED
 
 ---
 
-### [2026-04-16] — LOGIC — RUN B ORDER
+### [2026-04-16] — LOGIC — RUN B SEQUENCE
 
 DESCRIPTION:
-Run B order is incorrect. wall_2d is not part of Run B sequence.
+Run B sequence is not fully consistent as a unified placement chain.
 
 EXPECTED:
-runB_void → wall_2d → tall_mw
+All Run B elements must follow a strict ordered sequence (void → wall → tall).
 
 ACTUAL:
-runB_void → tall_mw  
-wall_2d is built separately using Run A reference (sink)
+wall_2d is not always treated as part of the same sequential flow.
 
 STATUS:
 OPEN
@@ -53,57 +52,114 @@ OPEN
 ### [2026-04-16] — STRUCTURE — WALL DEPENDENCY
 
 DESCRIPTION:
-wall_2d is anchored to Run A (sink module)
+wall_2d still depends on Run A reference logic instead of being owned by Run B.
 
 EXPECTED:
-wall_2d should belong to Run B and be placed sequentially
+wall_2d must belong to Run B placement system and follow its flow.
 
 ACTUAL:
-wall uses:
-ref = placed.runA["sink"]
+wall_2d placement still uses cross-run reference (Run A anchor).
 
 STATUS:
 OPEN
 
 ---
 
-### [2026-04-16] — LAYOUT — RUN B NOT L-SHAPE
+### [2026-04-16] — GEOMETRY — RUN B ORIENTATION
 
 DESCRIPTION:
-Run B is still linear along X axis
+Run B layout direction is correct, but geometry logic still behaves like Run A.
 
 EXPECTED:
-Run B should form L-shape (rotate along Z axis from corner)
+Run B geometry must follow Y-axis orientation logic.
 
 ACTUAL:
-Run B extends straight along X
+Modules in Run B still use X-axis style geometry.
 
 STATUS:
 OPEN
 
 ---
 
-### [2026-04-16] — DEBUG — VOID HANDLING
+### [2026-04-16] — GEOMETRY — RUN B ROTATION
 
 DESCRIPTION:
-runB_void sometimes only used for debug block, not true layout spacer
+Run B modules are not rotated correctly relative to the L-shape corner.
 
 EXPECTED:
-void must ALWAYS reserve layout width
+Modules must rotate correctly (90°) at the corner to form proper L-shape kitchen.
 
 ACTUAL:
-behavior depends on show_runB_void_block flag
+Modules appear unrotated or facing incorrect direction.
 
 STATUS:
 OPEN
+
+---
+
+### [2026-04-16] — LAYOUT — CORNER / VOID LOGIC
+
+DESCRIPTION:
+Void behavior at corner is not fully stable as layout spacing logic.
+
+EXPECTED:
+Void must always act as real layout spacer and define Run A ↔ Run B transition.
+
+ACTUAL:
+Void behavior is still partially dependent on debug flags / temporary handling.
+
+STATUS:
+OPEN
+
+---
+
+### [2026-04-16] — LAYOUT — RUN B AXIS DIRECTION
+
+DESCRIPTION:
+Previous issue reported Run B extending along X axis.
+
+EXPECTED:
+Run B must extend along Y axis.
+
+ACTUAL:
+Recent verified state confirms Run B axis direction is already corrected.
+
+STATUS:
+FIXED
+
+---
+
+### [2026-04-16] — RUNTIME — CORE SYSTEM STABILITY
+
+DESCRIPTION:
+Core systems (runtime, grouping, selection, highlight) were unstable in earlier phases.
+
+EXPECTED:
+System should run stable in PYTHA.
+
+ACTUAL:
+Recent sessions confirm runtime is stable with no crash.
+
+STATUS:
+FIXED
+
+---
+
+## PRIORITY (CURRENT)
+
+1. Run B rotation (CRITICAL)
+2. Run B geometry orientation
+3. wall_2d dependency cleanup
+4. stable Run B sequence
+5. corner / void behavior
 
 ---
 
 ## NOTES
 
-- All errors above are blocking correct kitchen layout
-- MUST fix Run B before implementing L-shape
-- DO NOT attempt geometry changes before placement is correct
+- DO NOT reopen axis direction issue unless regression appears
+- DO NOT modify geometry before fixing placement logic
+- KEEP all fixes minimal (single file, no refactor)
 
 ---
 

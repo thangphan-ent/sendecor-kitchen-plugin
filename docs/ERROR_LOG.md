@@ -2,12 +2,28 @@
 
 ---
 
+## GIẢI THÍCH (VI)
+
+- File này dùng để ghi lại các lỗi THỰC TẾ trong hệ thống (logic, layout, runtime)
+- Mỗi lỗi phải rõ ràng: xảy ra cái gì, mong muốn gì, thực tế ra sao
+- Đây là "nguồn sự thật" để GPT quyết định bước tiếp theo
+- Claude chỉ được fix dựa trên các lỗi đã ghi tại đây
+
+---
+
 ## RULE
 
-- ONLY log REAL errors from PYTHA or runtime
-- DO NOT log assumptions
-- EACH error = 1 entry
-- KEEP SHORT + CLEAR
+- ONLY log REAL errors from PYTHA or runtime  
+  → Chỉ ghi lỗi thực sự xảy ra, không suy đoán  
+
+- DO NOT log assumptions  
+  → Không ghi giả định hoặc nghi ngờ  
+
+- EACH error = 1 entry  
+  → Mỗi lỗi là 1 block riêng biệt  
+
+- KEEP SHORT + CLEAR  
+  → Ngắn gọn, rõ ràng, dễ đọc  
 
 ---
 
@@ -16,16 +32,21 @@
 [DATE] — [TYPE] — [MODULE]
 
 DESCRIPTION:
-<what happened>
+<what happened>  
+→ Mô tả lỗi xảy ra  
 
 EXPECTED:
-<what should happen>
+<what should happen>  
+→ Hành vi đúng mong muốn  
 
 ACTUAL:
-<what actually happened>
+<what actually happened>  
+→ Kết quả thực tế  
 
 STATUS:
-OPEN / FIXED
+OPEN / FIXED  
+→ OPEN: chưa xử lý  
+→ FIXED: đã xác nhận sửa xong  
 
 ---
 
@@ -65,16 +86,16 @@ OPEN
 
 ---
 
-### [2026-04-16] — GEOMETRY — RUN B ORIENTATION
+### [2026-04-16] — LAYOUT — CORNER / VOID LOGIC
 
 DESCRIPTION:
-Run B layout direction is correct, but geometry logic still behaves like Run A.
+Void behavior at corner is not fully stable as layout spacing logic.
 
 EXPECTED:
-Run B geometry must follow Y-axis orientation logic.
+Void must always act as real layout spacer and define Run A ↔ Run B transition.
 
 ACTUAL:
-Modules in Run B still use X-axis style geometry.
+Void behavior is still partially dependent on debug flags / temporary handling.
 
 STATUS:
 OPEN
@@ -97,16 +118,16 @@ OPEN
 
 ---
 
-### [2026-04-16] — LAYOUT — CORNER / VOID LOGIC
+### [2026-04-16] — GEOMETRY — RUN B ORIENTATION
 
 DESCRIPTION:
-Void behavior at corner is not fully stable as layout spacing logic.
+Run B layout direction is correct, but geometry logic still behaves like Run A.
 
 EXPECTED:
-Void must always act as real layout spacer and define Run A ↔ Run B transition.
+Run B geometry must follow Y-axis orientation logic.
 
 ACTUAL:
-Void behavior is still partially dependent on debug flags / temporary handling.
+Modules in Run B still use X-axis style geometry.
 
 STATUS:
 OPEN
@@ -147,19 +168,19 @@ FIXED
 
 ## PRIORITY (CURRENT)
 
-1. Run B rotation (CRITICAL)
-2. Run B geometry orientation
-3. wall_2d dependency cleanup
-4. stable Run B sequence
-5. corner / void behavior
+1. wall_2d dependency cleanup  
+2. stable Run B sequence  
+3. corner / void behavior  
+4. Run B rotation  
+5. Run B geometry orientation  
 
 ---
 
 ## NOTES
 
-- DO NOT reopen axis direction issue unless regression appears
-- DO NOT modify geometry before fixing placement logic
-- KEEP all fixes minimal (single file, no refactor)
+- DO NOT reopen axis direction issue unless regression appears  
+- FIX placement logic BEFORE geometry refinement  
+- KEEP all fixes minimal (single file, no refactor)  
 
 ---
 

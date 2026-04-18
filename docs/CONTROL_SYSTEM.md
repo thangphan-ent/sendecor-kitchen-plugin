@@ -76,15 +76,20 @@ Every Claude execution prompt must begin with a valid CONTROL HEADER.
 A valid CONTROL HEADER is either:
 
 ### Option A — Full control content
-The full relevant control content
 
-### Option B — Control summary
-A summary block that MUST include:
+OR
+
+### Option B — Control summary (MINIMUM REQUIRED)
+
+The summary MUST explicitly include:
 - CONFLICT RESOLUTION
 - DEFAULT BEHAVIOR
 - CONTROL_VERSION
 
-If the CONTROL HEADER is missing, execution must stop.
+If ANY of the above is missing:
+- CONTROL HEADER is INVALID
+- Claude must STOP
+- Claude must NOT execute
 
 ---
 
@@ -93,8 +98,6 @@ If the CONTROL HEADER is missing, execution must stop.
 Current active control version:
 
 CONTROL_VERSION: FINAL
-
-This is the active control protocol for the project.
 
 ---
 
@@ -121,7 +124,8 @@ Every Claude session must include:
 - CONTROL_VERSION: FINAL
 - SESSION_TYPE: PATCH / BUILD / REVIEW / TEST
 
-If STATE DECLARATION is missing, Claude must stop.
+If STATE DECLARATION is missing:
+- Claude must STOP
 
 ---
 
@@ -134,22 +138,16 @@ Examples:
 - one file says execute patch, another says do not execute
 - one file allows action, another blocks action
 
-If conflict is detected:
-- DO NOT execute
-- DO NOT guess
-- STOP immediately
-- LOG the conflict in ERROR_LOG.md
-
 ---
 
 ## 9. CONFLICT RESOLUTION
 
-If any instruction from another control file conflicts with this file:
+If conflict is detected:
 
-- DO NOT execute
-- DO NOT guess
-- STOP immediately
-- LOG the conflict in ERROR_LOG.md
+- DO NOT execute  
+- DO NOT guess  
+- STOP immediately  
+- LOG the conflict in ERROR_LOG.md  
 
 This rule overrides all other control instructions.
 
@@ -164,10 +162,8 @@ If:
 - required information is missing
 
 Then:
-- DO NOTHING
-- WAIT for clarification
-
-Safe stop is always preferred over assumption.
+- DO NOTHING  
+- WAIT for clarification  
 
 ---
 
@@ -175,7 +171,7 @@ Safe stop is always preferred over assumption.
 
 This file is the MASTER control file.
 
-Sub-files such as:
+Sub-files:
 - PATCH_GATE.md
 - AI_LOOP_GUARD.md
 - STATE_CHECK.md
@@ -184,20 +180,20 @@ must follow this file.
 
 They must NOT override this file.
 
-If any sub-file conflicts with this file:
+If conflict occurs:
 - follow this file
-- stop execution if needed
-- log the conflict
+- STOP if needed
+- log the issue
 
 ---
 
 ## 12. SUB-FILE REQUIREMENT
 
-Every control sub-file must clearly declare:
+Every control sub-file must declare:
 - its own scope
 - that it follows CONTROL_SYSTEM.md
 
-Recommended compatibility line:
+Recommended:
 
 Compatible with: CONTROL_SYSTEM
 
@@ -205,34 +201,34 @@ Compatible with: CONTROL_SYSTEM
 
 ## 13. CONTROL HEADER INJECTION
 
-GPT must inject the CONTROL HEADER at the start of every Claude execution prompt.
+GPT must inject CONTROL HEADER at the start of every Claude execution prompt.
 
 Recommended order:
 
-1. CONTROL HEADER
-2. TASK TYPE
-3. STATE DECLARATION
-4. TASK
-5. ERROR (if any)
-6. CODE
-
-This is required to reduce read-order ambiguity.
+1. CONTROL HEADER  
+2. TASK TYPE  
+3. STATE DECLARATION  
+4. TASK  
+5. ERROR (if any)  
+6. CODE  
 
 ---
 
 ## 14. CLAUDE COMPLIANCE CHECK (CRITICAL)
 
-Before any execution, Claude must verify the presence of:
+Before execution, Claude MUST verify:
 
-1. CONTROL HEADER
-2. TASK TYPE
-3. STATE DECLARATION
+1. CONTROL HEADER  
+2. TASK TYPE  
+3. STATE DECLARATION  
 
-If any required component is missing:
+---
 
-- DO NOT execute
-- DO NOT write code
-- STOP
+### IF ANY MISSING:
+
+- DO NOT execute  
+- DO NOT write code  
+- STOP  
 
 Output:
 
@@ -246,87 +242,83 @@ STOPPED
 
 ---
 
-## 15. OPTIONAL COMPLIANCE CONFIRMATION
+### IF ALL VALID:
 
-If all required components are present, Claude may start with:
+Claude may proceed.
+
+Optional:
 
 ### Compliance check
-- CONTROL HEADER: OK
-- TASK TYPE: OK
-- STATE: OK
-
-This is recommended because it makes failures visible in chat history.
+- CONTROL HEADER: OK  
+- TASK TYPE: OK  
+- STATE: OK  
 
 ---
 
-## 16. SILENT FAILURE PREVENTION
+## 15. SILENT FAILURE PREVENTION
 
-The system must never fail silently.
+The system must NEVER fail silently.
 
-Failures must be:
-- visible
-- explicit
-- actionable
-
-If protocol is incomplete, the correct action is STOP, not guess.
+All failures must be:
+- visible  
+- explicit  
+- actionable  
 
 ---
 
-## 17. EXECUTION FLOW
+## 16. EXECUTION FLOW
 
-Standard flow:
-
-1. User provides request
-2. GPT classifies task
-3. GPT validates task
-4. GPT injects CONTROL HEADER
-5. GPT declares STATE
-6. GPT generates Claude prompt
-7. Claude performs compliance check
-8. Claude executes only if valid
-9. GPT reviews result
-10. Verified result is updated to GitHub
+1. User request  
+2. GPT classifies task  
+3. GPT validates task  
+4. GPT injects CONTROL HEADER  
+5. GPT declares STATE  
+6. GPT generates prompt  
+7. Claude performs compliance check  
+8. Claude executes (if valid)  
+9. GPT reviews result  
+10. GitHub update  
 
 ---
 
-## 18. STOP RULES
+## 17. STOP RULES
 
-STOP immediately if:
-- task type is unclear
-- required context is missing
-- control files conflict
-- CONTROL HEADER is missing
-- STATE DECLARATION is missing
-- Claude compliance check fails
+STOP if:
+
+- task type unclear  
+- missing context  
+- control conflict  
+- invalid CONTROL HEADER  
+- missing STATE  
+- compliance check fails  
 
 ---
 
-## 19. SYSTEM NATURE
+## 18. SYSTEM NATURE
 
 This system is:
-- not runtime code
-- not a framework
-- not plugin architecture
+- not runtime code  
+- not a framework  
+- not plugin architecture  
 
 This system is:
-- a behavior protocol
-- a control layer
-- a workflow safety system
-
-It does not affect Lua runtime directly.
+- a behavior protocol  
+- a control layer  
+- a safety system  
 
 ---
 
-## 20. FINAL PRINCIPLE
+## 19. FINAL PRINCIPLE
 
-Priority order:
+Priority:
 
-- Safety over speed
-- Clarity over assumption
-- Determinism over improvisation
+- Safety over speed  
+- Clarity over assumption  
+- Determinism over guessing  
 
 When uncertain:
-STOP first.
+
+→ STOP first
 
 ---
 

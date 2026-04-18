@@ -1,3 +1,18 @@
+# ⚠️ ARCHIVED — DO NOT USE
+
+This control system is deprecated.
+
+It is kept for reference only.
+
+DO NOT use this file for:
+- prompt generation
+- execution
+- control decisions
+
+Active control system:
+→ docs/CONTROL_SYSTEM.md
+
+---
 # CONTROL SYSTEM V1 — SENDECOR KITCHEN PLUGIN
 
 ---
